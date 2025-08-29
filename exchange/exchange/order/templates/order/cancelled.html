@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order Cancelled - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="order-cancelled-section py-5">
+  <div class="container">
+    <div class="card shadow-lg mx-auto text-center bg-dark text-light" style="max-width: 600px;">
+      <div class="card-body">
+        <i class="fas fa-times-circle fa-5x text-danger mb-3"></i>
+        <h2 class="mb-3">Order Cancelled</h2>
+        <p class="text-muted">
+          Your order <strong>#{{ order_id }}</strong> has been successfully cancelled.
+        </p>
+
+        <div class="d-grid gap-2 mt-4">
+          <a href="{% url 'order:history' %}" class="btn btn-outline-light">
+            View Order History
+          </a>
+          <a href="{% url 'shop:all_products' %}" class="btn btn-primary">
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

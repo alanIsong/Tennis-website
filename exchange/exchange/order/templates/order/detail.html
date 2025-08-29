@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} - Petal & Pot{% endblock %}
+
+{% block content %}
+<section class="order-detail-section py-5">
+  <div class="container">
+    <div class="card shadow-lg mx-auto" style="max-width: 1000px;">
+      <div class="card-body">
+        <h2 class="text-center mb-4">Order Details</h2>
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h5>Order Summary</h5>
+            <p><strong>Order:</strong> #{{ order.id }}</p>
+            <p><strong>Date:</strong> {{ order.created|date:"d M Y" }}</p>
+            <p><strong>Order Total:</strong> €{{ order.total }}</p>
+            <p><strong>Status:</strong> 
+              <span class="badge bg-success"><i class="fas fa-check"></i> Paid</span>
+            </p>
+          </div>
+          <div class="col-md-6">
+            <h5>Billing Address</h5>
+            <p>
+              {{ order.billingName }}<br>
+              {{ order.billingAddress1 }}<br>
+              {{ order.billingCity }}<br>
+              {{ order.billingPostcode }}<br>
+              {{ order.billingCountry }}
+            </p>
+          </div>
+        </div>
+        <h5 class="mb-3">Items</h5>
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Unit Price</th>
+                <th scope="col">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in order_items %}
+              <tr>
+                <td>{{ item.product }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>€{{ item.price }}</td>
+                <td>€{{ item.sub_total }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="fw-bold">
+                <td colspan="3" class="text-end">Total</td>
+                <td>€{{ order.total }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end">Total Paid</td>
+                <td><strong>€{{ order.total }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <h5>Shipping Address</h5>
+            <p>
+              {{ order.shippingName }}<br>
+              {{ order.shippingAddress1 }}<br>
+              {{ order.shippingCity }}<br>
+              {{ order.shippingPostcode }}<br>
+              {{ order.shippingCountry }}
+            </p>
+          </div>
+          <div class="col-md-6">
+            <h5>Payment</h5>
+            <p>The order <strong>#{{ order.id }}</strong> has been paid successfully via Stripe.</p>
+          </div>
+        </div>
+        <div class="mt-5 text-center">
+          <form method="post" action="{% url 'order:cancel_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger px-5">
+              Cancel Order
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

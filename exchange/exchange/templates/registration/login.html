@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Sign In - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="py-5 d-flex justify-content-center">
+  <div class="card bg-dark text-light shadow-lg rounded-4 w-100" style="max-width: 480px;">
+    <div class="card-body p-4">
+      <h1 class="h3 text-center fw-bold text-uppercase mb-4">Sign In</h1>
+
+      {% if form.errors %}
+        <div class="alert alert-danger text-center fw-semibold mb-3">
+          Invalid email/username or password. Please try again.
+        </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'accounts:signin' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button class="btn btn-primary w-100 mt-2" type="submit">Log In</button>
+      </form>
+
+      <hr class="my-4">
+
+      <p class="text-center small mb-0">
+        Don’t have an account?
+        <a href="{% url 'accounts:join' %}" class="fw-bold">Create one</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+

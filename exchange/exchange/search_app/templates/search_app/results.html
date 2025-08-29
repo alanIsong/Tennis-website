@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block metadescription %}
+Browse our wide range of tennis gear and accessories at The Tennis Exchange. Find rackets, balls, apparel, and more to improve your game.
+{% endblock %}
+
+{% block title %}Search - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="search-results py-5">
+  <div class="container">
+
+    <div class="row mb-4">
+      <div class="col text-center">
+        <h1 class="fw-bold text-uppercase mb-2">Search Results</h1>
+        <p class="lead">
+          You searched for: <strong>"{{ search_query }}"</strong>
+          {% if results_count is not None %}<span class="text-muted">• {{ results_count }} result{% if results_count != 1 %}s{% endif %}</span>{% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      {% for product in search_results %}
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card h-100 text-center">
+          <a href="{{ product.get_absolute_url }}" class="product-link">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+            {% else %}
+              <img src="{% static 'img/placeholder.png' %}" alt="No image available" class="card-img-top product-image">
+            {% endif %}
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-price">€{{ product.price }}</p>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col text-center">
+        <p class="text-muted">No tennis products matched your search.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

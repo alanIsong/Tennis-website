@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Account - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container d-flex justify-content-center">
+    <div class="card bg-dark text-light shadow-lg rounded-4 w-100" style="max-width: 600px;">
+      <div class="card-body p-4 p-md-5">
+        <h1 class="h3 text-center fw-bold text-uppercase mb-3">Join The Tennis Exchange</h1>
+        <p class="text-center text-muted mb-4">Create your account to access premium tennis gear, apparel, and member perks.</p>
+
+        {% if form.is_bound and form.errors %}
+          <div class="alert alert-danger fw-semibold text-center">Please fix the errors below to continue.</div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary w-100 mt-2 fw-semibold">Sign Up</button>
+        </form>
+
+        <hr class="my-4">
+
+        <p class="text-center small mb-0">
+          Already have an account?
+          <a href="{% url 'accounts:signin' %}" class="fw-bold">Log In</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

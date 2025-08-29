@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ category.name }} - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="products py-5">
+  <div class="container">
+    <!-- Category Heading -->
+    <h2 class="text-center mb-5">{{ category.name }}</h2>
+
+    <div class="products-grid">
+      {% for product in products %}
+      <div class="card text-center shadow-sm p-3">
+        <a href="{{ product.get_absolute_url }}">
+          {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}"
+               style="max-width: 220px; height: auto;" class="mx-auto d-block mb-3">
+          {% else %}
+          <img src="{% static 'img/placeholder.png' %}" alt="No image available"
+               style="max-width: 220px; height: auto;" class="mx-auto d-block mb-3">
+          {% endif %}
+        </a>
+        <div class="card-body">
+          <h4 class="mb-2">{{ product.name }}</h4>
+          <p class="fw-bold">€{{ product.price }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center">No tennis products found in this category yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Profile - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container d-flex justify-content-center">
+    <div class="card bg-dark text-light shadow-lg rounded-4 w-100" style="max-width: 640px;">
+      <div class="card-body p-4 p-md-5 text-center">
+        <div class="mb-3">
+          <i class="fas fa-user-circle fa-6x text-warning"></i>
+        </div>
+
+        <h2 class="fw-bold text-uppercase mb-1 text-white">{{ user.username }}</h2>
+        <p class="text-white mb-1">📧 {{ user.email }}</p>
+        <p class="text-white mb-4">👤 Joined on {{ user.date_joined|date:"F d, Y" }}</p>
+
+
+        <hr class="border-secondary">
+
+        <div class="d-grid gap-3 mt-4">
+          <a href="{% url 'shop:all_products' %}" class="btn btn-primary btn-lg fw-semibold">Browse Tennis Gear</a>
+
+          <a href="{% url 'order:history' %}" class="btn btn-outline-primary fw-semibold">My Orders</a>
+
+          <a href="{% url 'accounts:password_update' %}" class="btn btn-outline-light fw-semibold">Change Password</a>
+
+          <form method="post" action="{% url 'accounts:signout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger fw-semibold">Log Out</button>
+          </form>
+
+          <form method="post" action="{% url 'accounts:account_remove' %}"
+            onsubmit="return confirm('Delete your Tennis Exchange account permanently?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger fw-semibold">Delete Account</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

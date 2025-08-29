@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block metadescription %}
+Review your tennis gear, apply a voucher, and check out securely at The Tennis Exchange.
+{% endblock %}
+
+{% block title %}Basket - The Tennis Exchange{% endblock %}
+
+{% block content %}
+{% if not cart_items %}
+<section class="py-5 text-center">
+  <div class="container">
+    <h1 class="display-6 fw-bold">Your basket is empty</h1>
+    <p class="mt-3">Browse the latest rackets, balls, and apparel to get started.</p>
+    <a href="{% url 'shop:all_products' %}" class="btn btn-primary mt-2">Shop Now</a>
+  </div>
+</section>
+{% else %}
+
+<section class="py-4">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Summary / Checkout -->
+      <div class="col-12 col-lg-5 order-1 order-lg-0">
+        <div class="card bg-dark border-0 shadow-sm rounded-4">
+          <div class="card-body p-4">
+            <h2 class="h4 mb-3">Order Summary</h2>
+            <p class="text-muted mb-4">Confirm your items, apply a voucher, then complete payment.</p>
+
+            <table class="table table-sm align-middle text-light">
+              <tbody>
+                {% if voucher %}
+                  <tr>
+                    <td class="text-muted">Subtotal</td>
+                    <td class="text-end">€{{ total|floatformat:"2" }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Voucher “{{ voucher.code }}” ({{ voucher.discount }}% off)</td>
+                    <td class="text-end text-danger">− €{{ discount|floatformat:"2" }}</td>
+                  </tr>
+                  <tr class="fw-bold">
+                    <td>Total</td>
+                    <td class="text-end">€{{ new_total|floatformat:"2" }}</td>
+                  </tr>
+                {% else %}
+                  <tr class="fw-bold">
+                    <td>Total</td>
+                    <td class="text-end">€{{ total|floatformat:"2" }}</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+
+            <!-- Voucher -->
+            <form action="{% url 'vouchers:voucher_apply' %}" method="post" class="d-flex gap-2 mt-3">
+              {% csrf_token %}
+              {{ voucher_apply_form }}
+              <button type="submit" class="btn btn-outline-light btn-sm px-3">Apply</button>
+            </form>
+
+            <!-- Pay -->
+            <form action="{% url 'cart:view_cart' %}" method="post" class="mt-3">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary w-100 py-2">Pay with Card</button>
+            </form>
+
+            {% if error %}
+              <div class="alert alert-danger mt-3 mb-0" role="alert">{{ error }}</div>
+            {% endif %}
+
+            <a href="{% url 'shop:all_products' %}" class="btn btn-secondary w-100 mt-2">Continue Shopping</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div class="col-12 col-lg-7 order-0 order-lg-1">
+        <div class="card bg-dark border-0 shadow-sm rounded-4">
+          <div class="card-body p-0">
+            <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-secondary">
+              <h2 class="h4 mb-0">Your Items</h2>
+              <span class="badge bg-primary rounded-pill">{{ cart_items|length }}</span>
+            </div>
+
+            <div class="list-group list-group-flush">
+              {% for cart_item in cart_items %}
+              <div class="list-group-item bg-dark text-light py-3">
+                <div class="row g-3 align-items-center">
+                  <div class="col-3 col-md-2">
+                    <a href="{{ cart_item.product.get_absolute_url }}">
+                      {% if cart_item.product.image %}
+                        <img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" class="img-fluid rounded product-thumb square-thumb">
+                      {% else %}
+                        <img src="{% static 'img/placeholder.png' %}" alt="No image" class="img-fluid rounded product-thumb square-thumb">
+                      {% endif %}
+                    </a>
+                  </div>
+                  <div class="col-9 col-md-5">
+                    <div class="fw-semibold">{{ cart_item.product.name }}</div>
+                    <div class="text-muted small">€{{ cart_item.product.price }} each</div>
+                    <div class="text-muted small">Qty: {{ cart_item.quantity }}</div>
+                  </div>
+                  <div class="col-12 col-md-3 text-md-end">
+                    <div class="fw-bold">€{{ cart_item.sub_total }}</div>
+                  </div>
+                  <div class="col-12 col-md-2 text-md-end">
+                    <div class="d-inline-flex gap-2">
+                      {% if cart_item.quantity < cart_item.product.stock %}
+                        <a href="{% url 'cart:add_item' cart_item.product.id %}" class="btn btn-sm btn-outline-light" title="Add one">
+                          <i class="fas fa-plus"></i>
+                        </a>
+                      {% endif %}
+                      <a href="{% url 'cart:remove_item' cart_item.product.id %}" class="btn btn-sm btn-outline-light" title="Remove one">
+                        <i class="fas fa-minus"></i>
+                      </a>
+                      <a href="{% url 'cart:delete_item' cart_item.product.id %}" class="btn btn-sm btn-outline-danger" title="Remove item">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endif %}
+{% endblock %}
+
+

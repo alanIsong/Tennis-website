@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if category %}{{ category.name }} - The Tennis Exchange{% else %}Our Products - The Tennis Exchange{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  {% if category %}
+    <h1>Explore {{ category.name }}</h1>
+    {% if category.description %}
+      <p>{{ category.description }}</p>
+    {% else %}
+      <p>Browse items in this category and find the best gear for your game.</p>
+    {% endif %}
+  {% else %}
+    <h1>Find everything you need for tennis</h1>
+    <p>Explore our collection and discover premium rackets, balls, apparel, and accessories.</p>
+  {% endif %}
+
+</section>
+
+<section class="products py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">
+      {% if category %}{{ category.name }}{% else %}Our Collection{% endif %}
+    </h2>
+
+    <div class="products-grid">
+      {% for product in products %}
+      <div class="card product-card text-center shadow-sm">
+        <a href="{{ product.get_absolute_url }}" class="product-link">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+          {% else %}
+            <img src="{% static 'img/placeholder.png' %}" alt="No image available" class="card-img-top product-image">
+          {% endif %}
+        </a>
+        <div class="card-body">
+          <h4 class="mb-2 text-truncate">{{ product.name }}</h4>
+          <p class="fw-bold">€{{ product.price }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center w-100">No tennis products available at the moment.</p>
+      {% endfor %}
+    </div>
+
+    {% if products.paginator.num_pages > 1 %}
+    <nav class="pagination mt-5" aria-label="Products pagination">
+      <ul class="pagination justify-content-center mb-0">
+        {% if products.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for pg in products.paginator.page_range %}
+        <li class="page-item {% if products.number == pg %}active{% endif %}">
+          <a class="page-link" href="?page={{ pg }}">{{ pg }}</a>
+        </li>
+        {% endfor %}
+
+        {% if products.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

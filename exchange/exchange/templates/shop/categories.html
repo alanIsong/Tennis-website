@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Categories - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <h1 class="text-center mb-5">Shop by Category</h1>
+
+    <div class="row">
+      {% for category in categories %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 text-center">
+          
+          <!-- Category Image -->
+          <a href="{% url 'shop:products_by_category' category.id %}">
+            {% if category.image %}
+            <img src="{{ category.image.url }}" alt="{{ category.name }}"
+                 class="img-fluid mb-3" style="max-height:200px; object-fit:contain;">
+            {% else %}
+            <img src="{% static 'img/placeholder.png' %}" alt="No image available"
+                 class="img-fluid mb-3" style="max-height:200px; object-fit:contain;">
+            {% endif %}
+          </a>
+
+          <!-- Category Name -->
+          <div class="card-body">
+            <h4>
+              <a href="{% url 'shop:products_by_category' category.id %}" class="text-decoration-none">
+                {{ category.name }}
+              </a>
+            </h4>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center">No tennis categories available yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+

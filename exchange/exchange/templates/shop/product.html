@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="product-detail py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      
+      <!-- Product Image -->
+      <div class="col-md-6 text-center mb-4 mb-md-0">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}"
+             class="img-fluid rounded shadow"
+             style="max-width: 320px; height: auto;">
+        {% else %}
+        <img src="{% static 'img/placeholder.png' %}" alt="No image available"
+             class="img-fluid rounded shadow"
+             style="max-width: 320px; height: auto;">
+        {% endif %}
+      </div>
+
+      <!-- Product Info -->
+      <div class="col-md-6">
+        <h1 class="mb-3">{{ product.name }}</h1>
+        <p class="mb-3 fw-bold fs-4">€{{ product.price }}</p>
+        <p class="mb-4">{{ product.description }}</p>
+
+        {% if product.stock > 0 %}
+        <a href="{% url 'cart:add_item' product.id %}" class="btn btn-primary btn-lg">
+          <i class="fas fa-cart-plus"></i> Add to Cart
+        </a>
+        {% else %}
+        <p class="text-danger"><strong>Currently Out of Stock</strong></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Products -->
+<section class="products py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">Recommended for You</h2>
+    <div class="products-grid">
+      {% for related in product.category.products.all|slice:":4" %}
+        {% if related.id != product.id %}
+        <div class="card shadow-sm">
+          <a href="{{ related.get_absolute_url }}">
+            {% if related.image %}
+            <img src="{{ related.image.url }}" alt="{{ related.name }}" 
+                 style="max-width: 200px; height: auto;" class="mx-auto d-block mb-2">
+            {% else %}
+            <img src="{% static 'img/placeholder.png' %}" alt="No image available" 
+                 style="max-width: 200px; height: auto;" class="mx-auto d-block mb-2">
+            {% endif %}
+          </a>
+          <div class="card-body text-center">
+            <h4 class="mb-2 text-dark">{{ related.name }}</h4>
+            <p class="fw-bold text-dark">€{{ related.price }}</p>
+          </div>
+        </div>
+        {% endif %}
+      {% empty %}
+      <p class="text-center">No related tennis products found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

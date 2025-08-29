@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order History - The Tennis Exchange{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <h1 class="text-center fw-bold text-uppercase mb-4">Order History</h1>
+
+    {% if orders %}
+      <div class="card bg-dark text-light shadow-lg rounded-4">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Order #</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                <tr>
+                  <td>{{ order.id }}</td>
+                  <td>{{ order.created|date:"d M Y" }}</td>
+                  <td>€{{ order.total }}</td>
+                  <td><span class="badge bg-success"><i class="fas fa-check"></i> Paid</span></td>
+                  <td class="text-end">
+                    <a href="{% url 'order:detail' order.id %}" class="btn btn-primary btn-sm">View Order</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="text-center">
+        <p class="mb-3">You have not placed any orders yet.</p>
+        <a href="{% url 'shop:all_products' %}" class="btn btn-secondary">Continue Shopping</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
